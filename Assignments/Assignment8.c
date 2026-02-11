@@ -40,7 +40,7 @@ if (status == 1)
     avg = (maths + english + stats + chemistry + physics) / 5;
 }
 
-//grade
+//grade allocation 
 if (avg >= 75){
     strcpy(grade, "Distinction");
 }else if (avg >= 60){
@@ -53,5 +53,5 @@ if (avg >= 75){
     strcpy(grade, "fail");
 }
 
-printf("your grade is %s",grade);
+printf("your grade is %s",grade);//Print the final rsult
 }
