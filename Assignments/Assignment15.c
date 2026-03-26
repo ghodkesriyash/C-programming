@@ -16,3 +16,6 @@ void main()
         printf("%d\n", rand());
     }
 }
+/*
+while the list is to be entered by the user, he/she should leave a space between every integer 
+*/
