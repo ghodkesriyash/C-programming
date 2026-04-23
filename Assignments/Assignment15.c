@@ -2,20 +2,24 @@
 #include <stdlib.h>
 #include <time.h>
 
-void main()
+int main()
 {
     int n;
     printf("Enter how many random numbers you want: ");
-    scanf("%d", &n);
 
-    srand(time(NULL));  // seed with current time
+    // Check if scanf successfully read an integer
+    if(scanf("%d", &n) != 1 || n <= 0)
+    {
+        printf("Invalid input! Please enter a positive integer.\n");
+        return 1;  // Exit the program with an error code
+    }
 
+    srand(time(NULL));
     printf("Pseudo Random Numbers:\n");
     for(int i = 0; i < n; i++)
     {
         printf("%d\n", rand());
     }
+
+    return 0;
 }
-/*
-while the list is to be entered by the user, he/she should leave a space between every integer 
-*/
