@@ -1,98 +1,107 @@
 #include <stdio.h>
-#include <string.h>
-#define MAX 3
 
-struct JobSeq {
-    int jobID;
-    char JobTitle[20];
-};
+#define maxsize 5
+#define titlelen 50
 
-int front = -1, rear = -1;
-struct JobSeq arr[MAX];
+int jobId[maxsize];
+char jobTitle[maxsize][titlelen];
+int front = -1;
+int rear = -1;
 
-int isEmpty() {
-    return (front == -1 || front > rear);
+/* ---------- queue operations ---------- */
+int QIsEmpty(){
+    return front == -1 || front > rear;
 }
 
-int isFull() {
-    return (rear == MAX - 1);
+int QIsFull(){
+    return rear == maxsize - 1;
 }
 
-void Enqueue(struct JobSeq value) {
-    if (isFull()) {
-        printf("The queue is full\n");
+void enqueue(int id, char title[]){
+    int i;
+
+    if(QIsFull()){
+        printf("Queue Overflow! Print queue is full.\n");
         return;
     }
-    if (front == -1) {
+
+    if(front == -1)
         front = 0;
-    }
-    rear += 1;
-    arr[rear] = value;
+
+    rear++;
+    jobId[rear] = id;
+
+    for(i = 0; title[i] != '\0' && i < titlelen - 1; i++)
+        jobTitle[rear][i] = title[i];
+    jobTitle[rear][i] = '\0';
+
+    printf("Print job added successfully\n");
 }
 
-struct JobSeq Dequeue() {
-    struct JobSeq value;
-    if (isEmpty()) {
-        printf("The queue is empty\n");
-        value.jobID = -1;
-        strcpy(value.JobTitle, "");
-        return value;
-    }
-
-    value = arr[front];
-    front += 1;
-    return value;
-}
-
-void printQueue() {
-    if (isEmpty()) {
-        printf("Queue is empty\n");
+void dequeue(){
+    if(QIsEmpty()){
+        printf("Queue Underflow! No print jobs available.\n");
         return;
     }
-    printf("Queue contents:\n");
-    for (int i = front; i <= rear; i++) {
-        printf("JobID: %d, Title: %s\n", arr[i].jobID, arr[i].JobTitle);
+
+    printf("Processing Print Job:\n");
+    printf("Job ID: %d\n", jobId[front]);
+    printf("Document Title: %s\n", jobTitle[front]);
+
+    front++;   /* just move front ahead, never reset it */
+}
+
+void display(){
+    int i;
+
+    if(QIsEmpty()){
+        printf("No Pending Print Jobs\n");
+        return;
+    }
+
+    printf("Print Jobs in Queue:\n");
+    for(i = front; i <= rear; i++){
+        printf("Job ID: %d, Document Title: %s\n", jobId[i], jobTitle[i]);
     }
 }
 
-int main() {
-    int choice;
+int main(){
+    int choice = 0;
+    int id;
+    char title[titlelen];
 
-    do {
-        printf("\n=== Job Queue Menu ===\n");
-        printf("1. Add Job\n");
-        printf("2. Delete Job\n");
-        printf("3. Display Queue\n");
-        printf("4. End\n");
+    printf("Queue initialized successfully.\n");
+
+    do{
+        printf("\n----- PRINT QUEUE (LINEAR) -----\n");
+        printf("1. Enqueue Print Job\n");
+        printf("2. Dequeue Print Job\n");
+        printf("3. Display Print Jobs\n");
+        printf("4. Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
 
-        switch (choice) {
-            case 1: {
-                struct JobSeq newJob;
-                printf("Enter Job ID: ");
-                scanf("%d", &newJob.jobID);
-                printf("Enter Job Title: ");
-                scanf(" %19[^\n]", newJob.JobTitle);
-                Enqueue(newJob);
-                break;
-            }
-            case 2: {
-                struct JobSeq removed = Dequeue();
-                if (removed.jobID != -1)
-                    printf("Deleted Job: %d, %s\n", removed.jobID, removed.JobTitle);
-                break;
-            }
-            case 3:
-                printQueue();
-                break;
-            case 4:
-                printf("Exiting...\n");
-                break;
-            default:
-                printf("Invalid choice\n");
+        if(choice == 1){
+            printf("Enter Job ID: ");
+            scanf("%d", &id);
+            printf("Enter Document Title: ");
+            scanf("%49s", title);
+
+            enqueue(id, title);
         }
-    } while (choice != 4);
+        else if(choice == 2){
+            dequeue();
+        }
+        else if(choice == 3){
+            display();
+        }
+        else if(choice == 4){
+            printf("Exiting...\n");
+        }
+        else{
+            printf("Invalid choice\n");
+        }
+    }while(choice != 4);
 
     return 0;
 }
